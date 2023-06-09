@@ -18,6 +18,6 @@ const reportSchema = new mongoose.Schema({
   ],
 });
 
-const reportEntity = mongoose.model("Report", reportSchema);
+const ReportsEntity = mongoose.model("Report", reportSchema);
 
-export default reportEntity;
+export default ReportEntity;

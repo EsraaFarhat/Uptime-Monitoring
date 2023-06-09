@@ -33,6 +33,6 @@ const checkSchema = new mongoose.Schema(
   }
 );
 
-const CheckEntity = mongoose.model("Check", checkSchema);
+const ChecksEntity = mongoose.model("Check", checkSchema);
 
-export default CheckEntity;
+export default ChecksEntity;

@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
@@ -19,9 +20,6 @@ userSchema.methods.comparePassword = async function (plainPassword) {
   return await bcrypt.compare(plainPassword, this.password);
 };
 
-userSchema.index({ email: 1 }, { unique: true });
+const UsersEntity = mongoose.model("User", userSchema);
 
-const UserEntity = mongoose.model("User", userSchema);
-UserEntity.ensureIndexes();
-
-export default UserEntity;
+export default UsersEntity;

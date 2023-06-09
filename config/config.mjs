@@ -17,6 +17,9 @@ const envSchema = Joi.object()
     PARAMETER_LIMIT: Joi.number().required(),
     PORT: Joi.number().required(),
     REQUEST_LIMIT: Joi.number().required(),
+    EMAIL_FROM: Joi.string().required(),
+    EMAIL_PASSWORD: Joi.string().required(),
+    PRIVATE_KEY: Joi.string().required(),
   })
   .unknown();
 
@@ -32,8 +35,6 @@ const config = {
   env: env.NODE_ENV,
   mongoose: {
     options: {
-      // Don't build indexes
-      autoIndex: false,
       // Use IPv4, skip trying IPv6
       family: 4,
       // Maintain up to 10 socket connections
@@ -52,6 +53,11 @@ const config = {
       request: env.REQUEST_LIMIT,
     },
   },
+  email: {
+    emailFrom: env.EMAIL_FROM,
+    emailPassword: env.EMAIL_PASSWORD,
+  },
+  privateKey: env.PRIVATE_KEY,
 };
 
 export default config;

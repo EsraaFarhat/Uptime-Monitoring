@@ -8,7 +8,7 @@ import "./database/connection.mjs";
 import config from "./config/config.mjs";
 import AppErrorHandler from "./config/error.mjs";
 import { morganErrorHandler, morganSuccessHandler } from "./config/morgan.mjs";
-import response from "./config/response.mjs";
+import usersRoutes from "./routes/users.routes.mjs";
 
 dotenv.config();
 
@@ -31,7 +31,7 @@ app.use(
 
 app.use(compression());
 
-app.use(response);
+app.use("/api/users", usersRoutes);
 
 app.use(AppErrorHandler.handler);
 app.use(AppErrorHandler.notFound);

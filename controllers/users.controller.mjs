@@ -35,13 +35,33 @@ export default class UsersController {
         To complete the sign-up process, you need to verify your email address by clicking on the link below: <br><br>
         <a href= ${req.protocol}://${req.get(
         "host"
-      )}/api/auth/verifyAccount/${token}> Verify Account </a>`;
+      )}/api/users/verifyAccount/${token}> Verify Account </a>`;
       sendEmail(user.email, mailSubject, mailBody);
 
       res.send({
         message: MESSAGES.EMAIL_VERIFICATION_SENT,
       });
     } catch (error) {
+      throw new AppError(error);
+    }
+  }
+
+  static async verifyAccount(req, res) {
+    try {
+      const { token } = req.params;
+
+      const decoded = jwt.verify(token, config.privateKey);
+      const { userId } = decoded;
+
+      await UsersProvider.updateUser({ _id: userId }, { isVerified: true });
+
+      res.send({
+        message: MESSAGES.EMAIL_VERIFIED,
+      });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new BadRequestError(MESSAGES.INVALID_VERIFICATION_TOKEN);
+      }
       throw new AppError(error);
     }
   }

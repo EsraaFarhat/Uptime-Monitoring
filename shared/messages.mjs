@@ -12,6 +12,8 @@ const MESSAGES = {
   USER_ADDED_SUCCESSFULLY: "User added successfully",
   EMAIL_VERIFICATION_SENT:
     "A verification link has been sent to your email account",
+  INVALID_VERIFICATION_TOKEN: "Invalid token",
+  EMAIL_VERIFIED: "Email is verified. You can now login to the website",
 };
 
 export default MESSAGES;

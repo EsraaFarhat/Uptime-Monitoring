@@ -6,9 +6,9 @@ const usersRoutes = Router();
 
 usersRoutes.route("/signup").post(asyncWrapper(UsersController.signUp));
 
-usersRoutes.patch(
+usersRoutes.get(
   "/verifyAccount/:token",
-  asyncWrapper(UsersController.activateAccount)
+  asyncWrapper(UsersController.verifyAccount)
 );
 
 usersRoutes.route("/login").post(asyncWrapper(UsersController.login));

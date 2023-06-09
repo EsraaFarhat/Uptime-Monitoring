@@ -2,8 +2,12 @@ import Joi from "joi";
 import UsersEntity from "../models/users.model.mjs";
 
 export default class UsersProvider {
+  static async getUserById(id, projection, options) {
+    const user = await UsersEntity.findById(id, projection, options);
+    return user;
+  }
+
   static async getUser(filters, projection, options) {
-    await UsersEntity.find({})
     const user = await UsersEntity.findOne(filters, projection, options);
     return user;
   }
@@ -13,6 +17,13 @@ export default class UsersProvider {
     addedUser = addedUser.save();
 
     return addedUser;
+  }
+
+  static async updateUser(filters, body) {
+    const updatedUser = await UsersEntity.findOneAndUpdate(filters, body, {
+      new: true,
+    });
+    return updatedUser;
   }
 
   static createUserSchema = (user) => {

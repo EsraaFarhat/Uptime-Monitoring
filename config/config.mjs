@@ -1,6 +1,5 @@
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-
 import dotenv from "dotenv";
 import Joi from "joi";
 
@@ -10,9 +9,8 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const envSchema = Joi.object()
   .keys({
-    // MONGODB_HOST: Joi.string().required(),
-    // MONGODB_NAME: Joi.string().required(),
-    // MONGODB_PORT: Joi.number().required(),
+    MONGODB_HOST: Joi.string().required(),
+    MONGODB_NAME: Joi.string().required(),
     NODE_ENV: Joi.string()
       .valid("development", "stage", "production")
       .required(),
@@ -32,25 +30,25 @@ if (error) {
 
 const config = {
   env: env.NODE_ENV,
-//   mongoose: {
-//     options: {
-//       autoIndex: false,
-//       // Close sockets after 45 seconds of inactivity
-//       family: 4,
-
-//       // Don't build indexes
-//       maxPoolSize: 10,
-//       // Maintain up to 10 socket connections (Please Reconfig when needed)
-//       serverSelectionTimeoutMS: 5000,
-//       // Keep trying to send operations for 5 seconds
-//       socketTimeoutMS: 45000, // Use IPv4, skip trying IPv6
-//     },
-//     url: `${env.MONGODB_HOST}${env.MONGODB_NAME}?retryWrites=true&w=majority`,
-//   },
+  mongoose: {
+    options: {
+      // Don't build indexes
+      autoIndex: false,
+      // Use IPv4, skip trying IPv6
+      family: 4,
+      // Maintain up to 10 socket connections
+      maxPoolSize: 10,
+      // Keep trying to send operations for 5 seconds
+      serverSelectionTimeoutMS: 5000,
+      // Close sockets after 45 seconds of inactivity
+      socketTimeoutMS: 45000,
+    },
+    url: `${env.MONGODB_HOST}${env.MONGODB_NAME}?retryWrites=true&w=majority`,
+  },
   port: env.PORT,
   router: {
     limit: {
-      parameter: env.PARAMATER_LIMIT,
+      parameter: env.PARAMETER_LIMIT,
       request: env.REQUEST_LIMIT,
     },
   },

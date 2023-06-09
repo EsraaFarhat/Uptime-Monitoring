@@ -4,12 +4,13 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import "./database/connection.mjs";
 import config from "./config/config.mjs";
 import AppErrorHandler from "./config/error.mjs";
 import { morganErrorHandler, morganSuccessHandler } from "./config/morgan.mjs";
 import response from "./config/response.mjs";
 
-dotenv.config()
+dotenv.config();
 
 const app = express();
 

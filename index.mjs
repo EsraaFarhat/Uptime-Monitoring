@@ -2,9 +2,7 @@ import app from "./app.mjs";
 import logger from "./shared/logger.mjs";
 import config from "./config/config.mjs";
 
-const port = process.env.PORT || 3000;
-
-let server = app.listen(port, () => {
+let server = app.listen(config.port, () => {
   logger.info(`Listening to port ${config.port}`);
 });
 

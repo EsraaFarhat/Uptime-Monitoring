@@ -1,7 +1,7 @@
 import Joi from "joi";
 import UsersEntity from "../models/users.model.mjs";
 
-export default class UsersProvider {
+export default class UsersService {
   static async getUserById(id, projection, options) {
     const user = await UsersEntity.findById(id, projection, options);
     return user;

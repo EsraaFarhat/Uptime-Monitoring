@@ -44,4 +44,22 @@ export default class UsersProvider {
     });
     return schema.validate(user);
   };
+
+  static userLoginSchema = (body) => {
+    const schema = Joi.object({
+      email: Joi.string().min(6).max(50).email().required(),
+      password: Joi.string()
+        .min(6)
+        .max(30)
+        .trim()
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{6,}$/
+        )
+        .messages({
+          "string.pattern.base": `"password" must include at least a number, an uppercase letter, a lowercase letter and a special character.`,
+        })
+        .required(),
+    });
+    return schema.validate(body);
+  };
 }

@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      PARAMETER_LIMIT: 10000
+      REQUEST_LIMIT: 20000
+      MONGODB_HOST: mongodb://mongo:27017/
+      MONGODB_NAME: uptime-monitoring
+      EMAIL_FROM: example@gmail.com
+      EMAIL_PASSWORD: user_password
+      PRIVATE_KEY:  your_jwt_secret_here
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    container_name: uptime-monitoring-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

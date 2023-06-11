@@ -35,4 +35,8 @@ export default class ReportsService {
     return report;
   }
 
+  static async getReportsAggregate(aggregate) {
+    const reports = await ReportsEntity.aggregate(aggregate);
+    return reports;
+  }
 }

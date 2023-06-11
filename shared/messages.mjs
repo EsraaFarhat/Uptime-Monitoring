@@ -31,6 +31,9 @@ const MESSAGES = {
   CHECK_NOT_MONITORED: "Check is not being monitored",
   MONITORING_STARTED: "Started monitoring check",
   MONITORING_STOPPED: "Stopped monitoring check",
+
+  REPORT_NOT_FOUND: "There is no report with entered id",
+  INVALID_REPORT_ID: "Invalid report id",
 };
 
 export default MESSAGES;

@@ -2,7 +2,6 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
-import dotenv from "dotenv";
 
 import "./database/connection.mjs";
 import config from "./config/config.mjs";
@@ -10,8 +9,7 @@ import AppErrorHandler from "./config/error.mjs";
 import { morganErrorHandler, morganSuccessHandler } from "./config/morgan.mjs";
 import usersRoutes from "./routes/users.routes.mjs";
 import checksRoutes from "./routes/checks.routes.mjs";
-
-dotenv.config();
+import reportsRoutes from "./routes/reports.routes.mjs";
 
 const app = express();
 
@@ -34,6 +32,7 @@ app.use(compression());
 
 app.use("/api/users", usersRoutes);
 app.use("/api/checks", checksRoutes);
+app.use("/api/reports", reportsRoutes);
 
 app.use(AppErrorHandler.handler);
 app.use(AppErrorHandler.notFound);

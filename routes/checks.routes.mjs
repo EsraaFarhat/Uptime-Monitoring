@@ -28,4 +28,7 @@ checksRoutes.post("/:id/start", asyncWrapper(ChecksController.startMonitoring));
 // Route to stop monitoring a check by ID
 checksRoutes.post("/:id/stop", asyncWrapper(ChecksController.stopMonitoring));
 
+// Route to get report for a check by ID
+checksRoutes.post("/:id/report", asyncWrapper(ChecksController.getCheckReport));
+
 export default checksRoutes;

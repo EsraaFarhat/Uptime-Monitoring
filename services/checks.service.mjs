@@ -186,12 +186,12 @@ export default class ChecksService {
         sendEmail(
           check.userId.email,
           `Server ${check.url} is DOWN`,
-          `Server ${check.url} is now DOWN.`
+          `Server ${check.url} is now DOWN. Please check your server.`
         );
       }
       report.status = "DOWN";
       report.outages += 1;
-      report.downtime += (Date.now() - start) / 1000; // Convert to seconds
+      report.downtime += (Date.now() - start) / 1000;
       report.history.push({
         status: "FAILURE",
         responseTime: Date.now() - start,

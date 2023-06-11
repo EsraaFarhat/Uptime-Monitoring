@@ -13,6 +13,7 @@ import { sendEmail } from "../utils/sendEmail.mjs";
 
 const jwtSecret = config.privateKey;
 export default class UsersController {
+  // Function to signup and send email for verification
   static async signUp(req, res) {
     try {
       const { error } = UsersService.createUserSchema(req.body);
@@ -53,6 +54,7 @@ export default class UsersController {
     }
   }
 
+  // Function to verify account
   static async verifyAccount(req, res) {
     try {
       const { token } = req.params;
@@ -74,6 +76,7 @@ export default class UsersController {
     }
   }
 
+  // Function to login
   static async login(req, res) {
     try {
       const { error } = UsersService.userLoginSchema(req.body);
@@ -93,7 +96,7 @@ export default class UsersController {
         throw new UnauthorizedError(MESSAGES.EMAIL_NOT_VERIFIED);
       }
 
-      // Generate and sign the JWT token
+      // Generate and sign the JWT token that expires in one day
       const token = jwt.sign({ userId: user._id }, jwtSecret, {
         expiresIn: "1d",
       });

@@ -7,6 +7,7 @@ import {
   NotFoundError,
 } from "../shared/app-error.mjs";
 import ChecksService from "../services/checks.service.mjs";
+import ReportsService from "../services/reports.service.mjs";
 import MESSAGES from "../shared/messages.mjs";
 import { validateObjectId, handlePaginationSort } from "../utils/helpers.mjs";
 
@@ -218,6 +219,36 @@ export default class ChecksController {
         statusCode: 200,
         message: MESSAGES.MONITORING_STOPPED,
         check,
+      });
+    } catch (error) {
+      throw new AppError(error);
+    }
+  }
+
+  // Function to get report for a check by ID
+  static async getCheckReport(req, res) {
+    try {
+      const { id } = req.params;
+      let response = validateObjectId(id);
+      if (response.error) {
+        throw new BadRequestError(MESSAGES.INVALID_CHECK_ID);
+      }
+
+      const filters = { _id: id, userId: req.user._id };
+
+      let check = await ChecksService.getCheck(filters);
+      if (!check) {
+        throw new BadRequestError(MESSAGES.CHECK_NOT_FOUND);
+      }
+
+      let report = await ReportsService.getReport({ checkId: id });
+      if (report) {
+        throw new BadRequestError(MESSAGES.REPORT_NOT_FOUND);
+      }
+
+      res.send({
+        statusCode: 200,
+        report,
       });
     } catch (error) {
       throw new AppError(error);

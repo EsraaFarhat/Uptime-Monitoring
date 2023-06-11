@@ -74,7 +74,7 @@ export default class ReportsController {
 
       let report = await ReportsService.getReport(filters, null, options);
       if (!report) {
-        throw new BadRequestError(MESSAGES.REPORT_NOT_FOUND);
+        throw new NotFoundError(MESSAGES.REPORT_NOT_FOUND);
       }
 
       res.send({

@@ -29,6 +29,6 @@ checksRoutes.post("/:id/start", asyncWrapper(ChecksController.startMonitoring));
 checksRoutes.post("/:id/stop", asyncWrapper(ChecksController.stopMonitoring));
 
 // Route to get report for a check by ID
-checksRoutes.post("/:id/report", asyncWrapper(ChecksController.getCheckReport));
+checksRoutes.get("/:id/report", asyncWrapper(ChecksController.getCheckReport));
 
 export default checksRoutes;

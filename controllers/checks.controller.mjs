@@ -74,7 +74,7 @@ export default class ChecksController {
 
       let check = await ChecksService.getCheck(filters);
       if (!check) {
-        throw new BadRequestError(MESSAGES.CHECK_NOT_FOUND);
+        throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
       }
 
       res.send({
@@ -236,14 +236,14 @@ export default class ChecksController {
 
       const filters = { _id: id, userId: req.user._id };
 
-      let check = await ChecksService.getCheck(filters);
+      let check = await ChecksService.getCheck(filters, ["_id"]);
       if (!check) {
-        throw new BadRequestError(MESSAGES.CHECK_NOT_FOUND);
+        throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
       }
 
       let report = await ReportsService.getReport({ checkId: id });
-      if (report) {
-        throw new BadRequestError(MESSAGES.REPORT_NOT_FOUND);
+      if (!report) {
+        throw new NotFoundError(MESSAGES.REPORT_NOT_FOUND);
       }
 
       res.send({

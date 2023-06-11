@@ -102,7 +102,10 @@ export default class UsersController {
       });
 
       res.send({
-        user: _.omit(user.toObject(), ["password"]),
+        user:
+          typeof user._id === "object"
+            ? _.omit(user.toObject(), ["password"])
+            : _.omit(user, ["password"]),
         token,
       });
     } catch (error) {

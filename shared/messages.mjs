@@ -27,6 +27,10 @@ const MESSAGES = {
   CHECK_DELETED_SUCCESSFULLY: "Check deleted successfully",
   CHECK_NOT_FOUND: "There is no check with entered id",
   INVALID_CHECK_ID: "Invalid check id",
+  CHECK_MONITORED: "Check is already being monitored",
+  CHECK_NOT_MONITORED: "Check is not being monitored",
+  MONITORING_STARTED: "Started monitoring check",
+  MONITORING_STOPPED: "Stopped monitoring check",
 };
 
 export default MESSAGES;

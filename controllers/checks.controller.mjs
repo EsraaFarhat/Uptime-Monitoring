@@ -1,15 +1,19 @@
 import _ from "lodash";
+import cron from "node-cron";
 
 import {
   AppError,
   BadRequestError,
   NotFoundError,
 } from "../shared/app-error.mjs";
-import ChecksService from "../services/check.service.mjs";
+import ChecksService from "../services/checks.service.mjs";
 import MESSAGES from "../shared/messages.mjs";
 import { validateObjectId, handlePaginationSort } from "../utils/helpers.mjs";
 
+let monitoringJobs = new Map();
+
 export default class ChecksController {
+  // Function to create a new check
   static async createCheck(req, res) {
     try {
       const { error } = ChecksService.createCheckSchema(req.body);
@@ -31,13 +35,14 @@ export default class ChecksController {
     }
   }
 
+  // Function to get all checks for the current user
   static async getChecks(req, res) {
     try {
       const { skip, limit, sort } = handlePaginationSort(req.query);
       const filters = { userId: req.user._id };
 
       const options = {
-        skip,   
+        skip,
         limit,
         sort,
       };
@@ -55,6 +60,7 @@ export default class ChecksController {
     }
   }
 
+  // Function to get check by ID
   static async getCheck(req, res) {
     try {
       const { id } = req.params;
@@ -79,6 +85,7 @@ export default class ChecksController {
     }
   }
 
+  // Function to update check by ID
   static async updateCheck(req, res) {
     try {
       const { id } = req.params;
@@ -111,6 +118,7 @@ export default class ChecksController {
     }
   }
 
+  // Function to delete check by ID
   static async deleteCheck(req, res) {
     try {
       const { id } = req.params;
@@ -131,6 +139,84 @@ export default class ChecksController {
       res.send({
         statusCode: 200,
         message: MESSAGES.CHECK_DELETED_SUCCESSFULLY,
+        check,
+      });
+    } catch (error) {
+      throw new AppError(error);
+    }
+  }
+
+  // Function to start monitoring a specific check
+  static async startMonitoring(req, res) {
+    try {
+      const { id } = req.params;
+      let response = validateObjectId(id);
+      if (response.error) {
+        throw new BadRequestError(MESSAGES.INVALID_CHECK_ID);
+      }
+
+      const filters = { _id: id, userId: req.user._id };
+
+      const options = {
+        populate: [
+          {
+            path: "userId",
+            select: ["email"],
+          },
+        ],
+      };
+      let check = await ChecksService.getCheck(filters, null, options);
+      if (!check) {
+        throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
+      }
+
+      if (monitoringJobs.has(id)) {
+        throw new BadRequestError(MESSAGES.CHECK_MONITORED);
+      }
+
+      let job = cron.schedule(`*/${check.interval} * * * *`, async function () {
+        await ChecksService.checkURL(check);
+      });
+
+      monitoringJobs.set(id, job);
+      res.send({
+        statusCode: 200,
+        message: MESSAGES.MONITORING_STARTED,
+        check,
+      });
+    } catch (error) {
+      throw new AppError(error);
+    }
+  }
+
+  // Function to stop monitoring a specific check
+  static async stopMonitoring(req, res) {
+    try {
+      const { id } = req.params;
+
+      let response = validateObjectId(id);
+      if (response.error) {
+        throw new BadRequestError(MESSAGES.INVALID_CHECK_ID);
+      }
+
+      const filters = { _id: id, userId: req.user._id };
+
+      let check = await ChecksService.getCheck(filters, ["_id"]);
+      if (!check) {
+        throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
+      }
+
+      let job = monitoringJobs.get(id);
+
+      if (!job) {
+        throw new BadRequestError(MESSAGES.CHECK_NOT_MONITORED);
+      }
+
+      job.stop();
+      monitoringJobs.delete(id);
+      res.send({
+        statusCode: 200,
+        message: MESSAGES.MONITORING_STOPPED,
         check,
       });
     } catch (error) {

@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 const checkSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     name: { type: String, trim: true, required: true },
     url: { type: String, trim: true, required: true },
     protocol: {
@@ -31,7 +35,7 @@ const checkSchema = new mongoose.Schema(
       statusCode: { type: Number },
     },
     tags: [{ type: String, trim: true }],
-    ignoreSSL: { type: Boolean, default: false },
+    ignoreSSL: { type: Boolean },
   },
   {
     timestamps: true,

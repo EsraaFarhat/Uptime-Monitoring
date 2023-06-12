@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import ReportsEntity from "./reports.model.mjs";
 
 const checkSchema = new mongoose.Schema(
   {
@@ -41,6 +42,12 @@ const checkSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+checkSchema.pre("deleteOne", { document: true }, async function (next) {
+  await ReportsEntity.deleteMany({ checkId: this._id }).exec();
+
+  next();
+});
 
 const ChecksEntity = mongoose.model("Check", checkSchema);
 

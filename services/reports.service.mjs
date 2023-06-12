@@ -31,7 +31,10 @@ export default class ReportsService {
   }
 
   static async deleteReport(filters) {
-    const report = await ReportsEntity.findOneAndDelete(filters);
+    const report = await ReportsEntity.findOne(filters);
+    if (report) {
+      await report.deleteOne();
+    }
     return report;
   }
 

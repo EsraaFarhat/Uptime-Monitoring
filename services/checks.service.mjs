@@ -38,7 +38,10 @@ export default class ChecksService {
   }
 
   static async deleteCheck(filters) {
-    const check = await ChecksEntity.findOneAndDelete(filters);
+    const check = await ChecksEntity.findOne(filters);
+    if (check) {
+      await check.deleteOne()
+    }
     return check;
   }
 

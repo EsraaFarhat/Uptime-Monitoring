@@ -17,15 +17,25 @@ services:
       EMAIL_FROM: example@gmail.com
       EMAIL_PASSWORD: user_password
       PRIVATE_KEY:  your_jwt_secret_here
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
     depends_on:
       - mongo
+      - redis
   mongo:
     image: mongo:latest
     container_name: uptime-monitoring-db
     ports:
-      - "27018:27017"
+      - "27017:27017"
     volumes:
       - mongo-data:/data/db
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
 
 volumes:
   mongo-data:
+  redis_data:

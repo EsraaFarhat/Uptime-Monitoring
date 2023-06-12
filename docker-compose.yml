@@ -19,6 +19,8 @@ services:
       PRIVATE_KEY:  your_jwt_secret_here
       REDIS_HOST: localhost
       REDIS_PORT: 6379
+      PUSHOVER_USER: 
+      PUSHOVER_TOKEN: 
     depends_on:
       - mongo
       - redis

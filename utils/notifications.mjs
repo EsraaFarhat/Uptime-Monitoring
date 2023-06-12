@@ -1,5 +1,7 @@
 import axios from "axios";
 import nodemailer from "nodemailer";
+import push from "pushover-notifications";
+
 import config from "../config/config.mjs";
 import logger from "../shared/logger.mjs";
 
@@ -11,6 +13,10 @@ export const notifyUser = async (methods) => {
   if (methods.webhook) {
     const { webhookUrl, message } = methods.webhook;
     await sendNotificationWithWebhook(webhookUrl, message);
+  }
+  if (methods.pushover) {
+    const { title, message } = methods.pushover;
+    await sendPushOverNotification(title, message);
   }
 };
 
@@ -50,3 +56,23 @@ export function sendEmail(userEmails, subject, content, attachments) {
     }
   });
 }
+
+export const sendPushOverNotification = async (title, content) => {
+  const pushover = new push({
+    user: config.pushover.user,
+    token: config.pushover.token,
+  });
+
+  const message = {
+    message: content,
+    title,
+  };
+
+  pushover.send(message, (err, result) => {
+    if (err) {
+      logger.error(err);
+    } else {
+      logger.log(result);
+    }
+  });
+};

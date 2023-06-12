@@ -22,6 +22,8 @@ const envSchema = Joi.object()
     PRIVATE_KEY: Joi.string().required(),
     REDIS_HOST: Joi.string().required(),
     REDIS_PORT: Joi.number().required(),
+    PUSHOVER_USER: Joi.string().required(),
+    PUSHOVER_TOKEN: Joi.string().required(),
   })
   .unknown();
 
@@ -63,6 +65,10 @@ const config = {
   redis: {
     host: env.REDIS_HOST,
     port: env.REDIS_PORT,
+  },
+  pushover: {
+    user: env.PUSHOVER_USER,
+    token: env.PUSHOVER_TOKEN,
   },
 };
 

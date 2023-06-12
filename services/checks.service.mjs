@@ -168,6 +168,10 @@ export default class ChecksService {
                 message: `Server ${check.url} is now UP.`,
               }
             : undefined,
+          pushover: {
+            title: `Server ${check.url} is UP`,
+            message: `Server ${check.url} is now UP.`,
+          },
         });
       }
       report.status = "UP";
@@ -206,6 +210,10 @@ export default class ChecksService {
                 message: `Server ${check.url} is now DOWN. Please check the server.`,
               }
             : undefined,
+          pushover: {
+            title: `Server ${check.url} is DOWN`,
+            message: `Server ${check.url} is now DOWN. Please check the server.`,
+          },
         });
       }
       report.status = "DOWN";

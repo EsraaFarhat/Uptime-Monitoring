@@ -10,6 +10,7 @@ import { morganErrorHandler, morganSuccessHandler } from "./config/morgan.mjs";
 import usersRoutes from "./routes/users.routes.mjs";
 import checksRoutes from "./routes/checks.routes.mjs";
 import reportsRoutes from "./routes/reports.routes.mjs";
+import "./utils/cronJobs.mjs";
 
 const app = express();
 

@@ -20,6 +20,8 @@ const envSchema = Joi.object()
     EMAIL_FROM: Joi.string().required(),
     EMAIL_PASSWORD: Joi.string().required(),
     PRIVATE_KEY: Joi.string().required(),
+    REDIS_HOST: Joi.string().required(),
+    REDIS_PORT: Joi.number().required(),
   })
   .unknown();
 
@@ -58,6 +60,10 @@ const config = {
     emailPassword: env.EMAIL_PASSWORD,
   },
   privateKey: env.PRIVATE_KEY,
+  redis: {
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+  },
 };
 
 export default config;

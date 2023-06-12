@@ -10,8 +10,8 @@ import ChecksService from "../services/checks.service.mjs";
 import ReportsService from "../services/reports.service.mjs";
 import MESSAGES from "../shared/messages.mjs";
 import { validateObjectId, handlePaginationSort } from "../utils/helpers.mjs";
-
-let monitoringJobs = new Map();
+import { client } from "../database/connection.mjs";
+import { monitoringJobs } from "../utils/cronJobs.mjs";
 
 export default class ChecksController {
   // Function to create a new check
@@ -171,15 +171,21 @@ export default class ChecksController {
         throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
       }
 
+      // Check if there is already a cron job running for this check
       if (monitoringJobs.has(id)) {
         throw new BadRequestError(MESSAGES.CHECK_MONITORED);
       }
 
+      // Start the cron job
       let job = cron.schedule(`*/${check.interval} * * * *`, async function () {
         await ChecksService.checkURL(check);
       });
 
+      // Add the job to the monitoringJobs so we can stop it later
       monitoringJobs.set(id, job);
+      // Add the check to redis so we can start its cron job again if the server stopped
+      await client.hSet(`job:${id}`, "checkId", id);
+
       res.send({
         statusCode: 200,
         message: MESSAGES.MONITORING_STARTED,
@@ -207,14 +213,19 @@ export default class ChecksController {
         throw new NotFoundError(MESSAGES.CHECK_NOT_FOUND);
       }
 
+      // Get the running job
       let job = monitoringJobs.get(id);
-
       if (!job) {
         throw new BadRequestError(MESSAGES.CHECK_NOT_MONITORED);
       }
 
+      // Stop the job
       job.stop();
+      // Delete the job from the monitoringJobs
       monitoringJobs.delete(id);
+      // Delete the job from redis
+      await client.del(`job:${id}`);
+
       res.send({
         statusCode: 200,
         message: MESSAGES.MONITORING_STOPPED,

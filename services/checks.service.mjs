@@ -5,7 +5,7 @@ import https from "https";
 import ReportsService from "../services/reports.service.mjs";
 import ReportsEntity from "../models/reports.model.mjs";
 import ChecksEntity from "../models/checks.model.mjs";
-import { sendEmail } from "../utils/sendEmail.mjs";
+import { notifyUser } from "../utils/notifications.mjs";
 
 export default class ChecksService {
   static async getCheck(filters, projection, options) {
@@ -40,7 +40,7 @@ export default class ChecksService {
   static async deleteCheck(filters) {
     const check = await ChecksEntity.findOne(filters);
     if (check) {
-      await check.deleteOne()
+      await check.deleteOne();
     }
     return check;
   }
@@ -156,11 +156,19 @@ export default class ChecksService {
 
       if (!report.status || report.status === "DOWN") {
         // If the server was down and now is up, send an email
-        sendEmail(
-          check.userId.email,
-          `Server ${check.url} is UP`,
-          `Server ${check.url} is now UP.`
-        );
+        await notifyUser({
+          mail: {
+            to: check.userId.email,
+            title: `Server ${check.url} is UP`,
+            subject: `Server ${check.url} is now UP.`,
+          },
+          webhook: check.webhook
+            ? {
+                webhookUrl: check.webhook,
+                message: `Server ${check.url} is now UP.`,
+              }
+            : undefined,
+        });
       }
       report.status = "UP";
       report.uptime += (Date.now() - start) / 1000;
@@ -186,11 +194,19 @@ export default class ChecksService {
       }
       if (!report.status || report.status === "UP") {
         // If the server was up and now is down, send an email
-        sendEmail(
-          check.userId.email,
-          `Server ${check.url} is DOWN`,
-          `Server ${check.url} is now DOWN. Please check your server.`
-        );
+        await notifyUser({
+          mail: {
+            to: check.userId.email,
+            title: `Server ${check.url} is DOWN`,
+            subject: `Server ${check.url} is now DOWN. Please check the server.`,
+          },
+          webhook: check.webhook
+            ? {
+                webhookUrl: check.webhook,
+                message: `Server ${check.url} is now DOWN. Please check the server.`,
+              }
+            : undefined,
+        });
       }
       report.status = "DOWN";
       report.outages += 1;

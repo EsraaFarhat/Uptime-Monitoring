@@ -9,7 +9,7 @@ import {
   UnauthorizedError,
 } from "../shared/app-error.mjs";
 import MESSAGES from "../shared/messages.mjs";
-import { sendEmail } from "../utils/sendEmail.mjs";
+import { sendEmail } from "../utils/notifications.mjs";
 
 const jwtSecret = config.privateKey;
 export default class UsersController {

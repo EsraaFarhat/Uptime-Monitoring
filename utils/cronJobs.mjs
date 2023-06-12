@@ -11,7 +11,19 @@ export const startMonitoringCronJobs = async () => {
     const keys = await client.keys("job:*");
     const checkIds = keys.map((key) => key.split(":")[1]);
     // Get all the checks that match these IDs
-    const checks = await ChecksService.getChecks({ _id: { $in: checkIds } });
+    const options = {
+      populate: [
+        {
+          path: "userId",
+          select: ["email"],
+        },
+      ],
+    };
+    const checks = await ChecksService.getChecks(
+      { _id: { $in: checkIds } },
+      null,
+      options
+    );
     // For each check start the cron job for monitoring
     checks.forEach((check) => {
       let job = cron.schedule(`*/${check.interval} * * * *`, async function () {

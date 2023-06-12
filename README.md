@@ -17,11 +17,8 @@ This project is an uptime monitoring RESTful API server that allows authenticate
 ## 5. Group checks by tags
 * Users can group their checks by tags and generate reports by tag.
 
-# Overview
 ## Getting Started
-* 1. Clone this repository to your local machine.
-* 2. Navigate to the project directory.
-* 3. Run sudo docker-compose up to start the server.
-* 4. Use the endpoints defined in the API documentation to interact with the server.
-
-```
+* Clone this repository to your local machine.
+* Navigate to the project directory.
+* Run sudo docker-compose up to start the server.
+* Use the endpoints defined in the API documentation to interact with the server.

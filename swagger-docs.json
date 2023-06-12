@@ -1,0 +1,1574 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the API documentation for the Uptime Monitoring System.",
+        "version": "1.0.0",
+        "title": "Uptime Monitoring API"
+    },
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "tags": [
+        {
+            "name": "users",
+            "description": "API for users in the system"
+        },
+        {
+            "name": "checks",
+            "description": "API for URL checks in the system"
+        },
+        {
+            "name": "reports",
+            "description": "API for reports in the system"
+        }
+    ],
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "paths": {
+        "/users/signup": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Sign up a new user",
+                "description": "",
+                "operationId": "signUp",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SignUp"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 201
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Account verification successful"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid input"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verifyAccount/{token}": {
+            "get": {
+                "summary": "Verify a user's account.",
+                "description": "This route is used to verify a user's account using a token that is sent to their email upon registration.",
+                "tags": [
+                    "users"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token for user verification",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account verified successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Account verification successful"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid or expired verification token",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid or expired verification token"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Log in a user",
+                "description": "",
+                "operationId": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User login data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "user": {
+                                    "$ref": "#/definitions/User"
+                                },
+                                "token": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid input"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checks": {
+            "post": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Create a new URL check",
+                "description": "",
+                "operationId": "createCheck",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "URL check that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Check"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Check created successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 201
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check created successfully"
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid input"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Get all checks for the current user",
+                "description": "",
+                "operationId": "getChecks",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "count": {
+                                    "type": "integer",
+                                    "example": 100
+                                },
+                                "checks": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Check"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checks/{id}": {
+            "get": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Get a check by ID",
+                "description": "",
+                "operationId": "getCheck",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of check to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Update a check by ID",
+                "description": "",
+                "operationId": "updateCheck",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of check to return",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Check object that needs to be updated",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Check"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Check updated successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check updated successfully"
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid input"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Deletes a check by ID",
+                "description": "",
+                "operationId": "deleteCheck",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Check id to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Check deleted successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check deleted successfully"
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checks/{id}/start": {
+            "post": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Start monitoring a check by ID",
+                "description": "",
+                "operationId": "startMonitoring",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of check to start monitoring",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Monitoring started successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Monitoring started successfully"
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checks/{id}/stop": {
+            "post": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Stop monitoring a check by ID",
+                "description": "",
+                "operationId": "stopMonitoring",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of check to stop monitoring",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Monitoring stopped successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Monitoring stopped successfully"
+                                },
+                                "check": {
+                                    "$ref": "#/definitions/Check"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checks/{id}/report": {
+            "get": {
+                "tags": [
+                    "checks"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Get a report for a check by ID",
+                "description": "",
+                "operationId": "getCheckReport",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of check to get the report",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "report": {
+                                    "$ref": "#/definitions/Report"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Check not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Check not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reports": {
+            "get": {
+                "tags": [
+                    "reports"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Get all reports for the current user",
+                "description": "",
+                "operationId": "getReports",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "orderBy",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "tag",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "count": {
+                                    "type": "integer",
+                                    "example": 100
+                                },
+                                "reports": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Check"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/{id}": {
+            "get": {
+                "tags": [
+                    "reports"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "summary": "Get a specific report by ID",
+                "description": "",
+                "operationId": "getReport",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of report to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "report": {
+                                    "$ref": "#/definitions/Report"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid ID supplied"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Report not found",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Report not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "statusCode": {
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "example": "johndoe"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Password123!"
+                },
+                "isVerified": {
+                    "type": "boolean",
+                    "example": false
+                }
+            },
+            "required": [
+                "username",
+                "email",
+                "password"
+            ]
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Password123!"
+                }
+            },
+            "required": [
+                "email",
+                "password"
+            ]
+        },
+        "SignUp": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "example": "johndoe"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Password123!"
+                }
+            },
+            "required": [
+                "username",
+                "email",
+                "password"
+            ]
+        },
+        "Check": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string",
+                    "format": "ObjectId"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Google Check"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://www.google.com"
+                },
+                "protocol": {
+                    "type": "string",
+                    "enum": [
+                        "HTTP",
+                        "HTTPS",
+                        "TCP"
+                    ]
+                },
+                "path": {
+                    "type": "string",
+                    "example": "/api"
+                },
+                "port": {
+                    "type": "integer",
+                    "example": 80
+                },
+                "webhook": {
+                    "type": "string",
+                    "example": "https://webhook.site/"
+                },
+                "timeout": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "interval": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "threshold": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "username": {
+                            "type": "string",
+                            "example": "username"
+                        },
+                        "password": {
+                            "type": "string",
+                            "example": "password"
+                        }
+                    }
+                },
+                "httpHeaders": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "example": "Content-Type"
+                            },
+                            "value": {
+                                "type": "string",
+                                "example": "application/json"
+                            }
+                        }
+                    }
+                },
+                "assert": {
+                    "type": "object",
+                    "properties": {
+                        "statusCode": {
+                            "type": "integer",
+                            "example": 200
+                        }
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "example": "tag1"
+                    }
+                },
+                "ignoreSSL": {
+                    "type": "boolean",
+                    "example": false
+                }
+            },
+            "required": [
+                "userId",
+                "name",
+                "url",
+                "protocol"
+            ]
+        },
+        "Report": {
+            "type": "object",
+            "properties": {
+                "checkId": {
+                    "type": "string",
+                    "format": "ObjectId"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "UP",
+                        "DOWN"
+                    ]
+                },
+                "availability": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "outages": {
+                    "type": "integer"
+                },
+                "downtime": {
+                    "type": "integer"
+                },
+                "uptime": {
+                    "type": "integer"
+                },
+                "responseTime": {
+                    "type": "integer"
+                },
+                "history": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "timestamp": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "SUCCESS",
+                                    "FAILURE"
+                                ]
+                            },
+                            "responseTime": {
+                                "type": "integer"
+                            },
+                            "error": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [
+                "checkId",
+                "status",
+                "availability",
+                "responseTime"
+            ]
+        }
+    }
+}

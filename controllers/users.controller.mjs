@@ -102,6 +102,7 @@ export default class UsersController {
       });
 
       res.send({
+        statusCode: 200,
         user:
           typeof user._id === "object"
             ? _.omit(user.toObject(), ["password"])
